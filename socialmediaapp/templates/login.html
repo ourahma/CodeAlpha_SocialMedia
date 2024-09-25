@@ -1,9 +1,232 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<html><head>
-<title>404 Not Found</title>
-</head><body>
-<h1>Not Found</h1>
-<p>The requested URL /html/winku/login.html was not found on this server.</p>
-<p>Additionally, a 404 Not Found
-error was encountered while trying to use an ErrorDocument to handle the request.</p>
-</body></html>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title>Connectify</title>
+    <link
+      rel="icon"
+      href="{% static 'images/fav.png' %}"
+      type="image/png"
+      sizes="16x16"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/main.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/color.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    {% if messages %} {% include 'alert.html' %} {% endif %}
+
+    <!--<div class="se-pre-con"></div>-->
+    <div class="theme-layout">
+      <div class="container-fluid pdng0">
+        <div class="row merged">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="land-featurearea">
+              <div class="land-meta">
+                <h1>Connectify</h1>
+                <p>Where Connections Spark Conversations</p>
+                <div class="friend-logo">
+                  <span
+                    ><img
+                      src="{% static 'images/wink.png' %}"
+                      alt=""
+                      width="60%"
+                  /></span>
+                </div>
+                <a href="#" title="" class="folow-me">Follow Us on</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="login-reg-bg">
+              <div class="log-reg-area sign">
+                <h2 class="log-title">Login</h2>
+
+                <form method="post" action="{% url 'login_user' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      id="input"
+                      name="username"
+                      required="required"
+                    />
+                    <label class="control-label" for="input">Username</label
+                    ><i class="mtrl-select"></i>
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="password"
+                      name="password"
+                      required="required"
+                    />
+                    <label class="control-label" for="input">Password</label
+                    ><i class="mtrl-select"></i>
+                  </div>
+                  <div class="checkbox"></div>
+                  <a href="#" title="" class="forgot-pwd">Forgot Password?</a>
+                  <div class="submit-btns">
+                    <button class="mtr-btn btn-danger signin" type="submit">
+                      <span>Login</span>
+                    </button>
+                    <button class="mtr-btn signup" type="button">
+                      <span>Register</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div class="log-reg-area reg">
+                <h2 class="log-title">Register</h2>
+                <p>Where Connections Spark Conversations</p>
+                <form
+                  method="POST"
+                  action="{% url 'register' %}"
+                  enctype="multipart/form-data"
+                >
+                  {% csrf_token %}
+				  <div class="form-group">
+                    <input type="text" name="username" required="required" />
+                    <label class="control-label" for="input">User Name</label
+                    ><i class="mtrl-select"></i>
+                  </div>
+                  <div class="row ">
+					<div class="col-md-6">
+						<div class="form-group">
+							<input type="text" name="first_name" required="required" />
+							<label class="control-label" for="input">First Name</label
+							><i class="mtrl-select"></i>
+						  </div>
+						  
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<input type="text" name="last_name" required="required" />
+							<label class="control-label" for="input">Last Name</label
+							><i class="mtrl-select"></i>
+						  </div>
+					</div>
+				  </div>
+
+                  
+				<div class="row">
+					<div class="col-md-6"><div class="form-group">
+						<input
+						  type="password"
+						  name="password1"
+						  id="password1"
+						  required="required"
+						/>
+						<label class="control-label" for="input">Password</label
+						><i class="mtrl-select"></i>
+					  </div></div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<input
+							  type="password"
+							  name="password2"
+							  id="password2"
+							  required="required"
+							/>
+							<label class="control-label" for="input"
+							  >Confirm Password</label
+							><i class="mtrl-select"></i>
+							
+							
+						  </div>
+					</div>
+					<span id="passwordError" style="color: red; display: none"
+							  >Passwords do not match.</span>
+				</div>
+                  
+
+                  
+
+                  <div class="form-group">
+                    <input type="email" name="email" required="required" />
+                    <label class="control-label" for="input">Email</label
+                    ><i class="mtrl-select"></i>
+                  </div>
+                  <div class="file-upload">
+                    <label for="profile_picture" class="custom-file-upload">
+                      <i class="fa fa-cloud-upload"></i> Upload Profile Picture
+                    </label>
+                    <input
+                      type="file"
+                      id="profile_picture"
+                      name="profile_picture"
+                      accept="image/*"
+                      required
+                    />
+                    <span id="file-name">No file chosen</span>
+                  </div>
+
+                  <div class="submit-btns">
+                    {% comment %}
+                    <button
+                      class="mtr-btn signup"
+                      id="submitButton"
+                      type="submit"
+                    >
+                      <span>Register</span>
+                    </button>
+                    {% endcomment %}
+                    <button class="mtr-btn " type="submit"><span>Resgister</span></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script
+      data-cfasync="false"
+      src="https://pillser.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+      const password1Input = document.getElementById("password1");
+      const password2Input = document.getElementById("password2");
+      const passwordError = document.getElementById("passwordError");
+
+      function validatePasswords() {
+        const password1 = password1Input.value;
+        const password2 = password2Input.value;
+        const fileInput = document.getElementById("profile_picture");
+        const fileName = document.getElementById("file-name");
+        console.log(password1);
+        console.log(password2);
+        if (password1 !== password2) {
+          passwordError.style.display = "block"; 
+          password2Input.style.borderColor = "red"; 
+        } else {
+          passwordError.style.display = "none";
+          password2Input.style.borderColor = "";
+        }
+        fileInput.addEventListener("change", function () {
+          if (this.files && this.files[0]) {
+            fileName.textContent = this.files[0].name;
+          } else {
+            fileName.textContent = "No file chosen";
+          }
+        });
+      }
+
+      password1Input.addEventListener("input", validatePasswords);
+      password2Input.addEventListener("input", validatePasswords);
+    </script>
+  </body>
+</html>

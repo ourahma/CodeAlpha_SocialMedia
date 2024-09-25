@@ -1,0 +1,281 @@
+{% load static %}
+<div class="central-meta item">
+  <div class="user-post">
+    <div class="friend-info">
+      <figure>
+        <img src="{{ user.profile.profile_picture.url }}" alt="" />
+      </figure>
+      <div class="friend-name">
+        <ins
+          ><a href="time-line.html" title=""
+            >{{ user.first_name }} {{ user.last_name }}</a
+          ></ins
+        >
+        <span>published: {{ post.created_at }}</span>
+      </div>
+      <div class="post-meta">
+        <img src="{{ post.image.url }}" alt="" />
+        <div class="we-video-info">
+          <ul>
+            <li>
+              <span class="views" data-toggle="tooltip" title="views">
+                <i class="fa fa-eye"></i>
+                <ins>1.2k</ins>
+              </span>
+            </li>
+            <li>
+              <span class="comment" data-toggle="tooltip" title="Comments">
+                <i class="fa fa-comments-o"></i>
+                <ins>{{ post.comment_count }}</ins>
+              </span>
+            </li>
+            <li>
+              <span class="like" data-toggle="tooltip" title="like">
+                <i class="ti-heart" id="like_btn"></i>
+                <ins>{{ post.like_count }}</ins>
+              </span>
+            </li>
+            <li>
+              <span class="dislike" data-toggle="tooltip" title="dislike">
+                <i class="ti-heart-broken" id="dislike_btn"></i>
+                <ins>{{ post.dislike_count }}</ins>
+              </span>
+            </li>
+            {% comment %}
+            <li class="social-media">
+              <div class="menu">
+                <div class="btn trigger">
+                  <i class="fa fa-share-alt"></i>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-html5"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-facebook"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-google-plus"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-twitter"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-css3"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-instagram"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-dribbble"></i></a>
+                  </div>
+                </div>
+                <div class="rotater">
+                  <div class="btn btn-icon">
+                    <a href="#" title=""><i class="fa fa-pinterest"></i></a>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {% endcomment %}
+          </ul>
+        </div>
+        <div class="description">
+          <p>{{ post.content }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="coment-area">
+      <ul class="we-comet comment_section">
+        {% for comment,replies in post.get_comments_with_replies.items %}
+        <li>
+          <div class="comet-avatar  ">
+            <img src="{{ comment.user.profile.profile_picture.url }}" alt="" />
+          </div>
+          <div class="we-comment">
+            <div class="coment-head">
+              <h5>
+                <a href="time-line.html" title=""
+                  >{{ comment.user.first_name }} {{ comment.user.last_name}}</a
+                >
+              </h5>
+              <span>{{ comment.created_at|timesince }}</span>
+              <a class="we-reply" href="#" title="Reply"
+                ><i class="fa fa-reply"></i
+              ></a>
+              <a class="we-reply" title="Delete"
+                ><i
+                  class="fa fa-trash delete_comment"
+                  aria-hidden="true"
+                  data-index="{{ comment.id }}"
+                ></i
+              ></a>
+            </div>
+            <p>{{ comment.content }}</p>
+          </div>
+          <ul>
+            {% for Reply in replies %}
+            <li>
+              <div class="comet-avatar">
+                <img
+                  src="{{ reply.user.profile.profile_picture.url }}"
+                  alt=""
+                />
+              </div>
+              <div class="we-comment">
+                <div class="coment-head">
+                  <h5>
+                    <a href="time-line.html" title=""
+                      >{{ reply.user.first_name }} {{ reply.user.last_name }}</a
+                    >
+                  </h5>
+                  <span>{{ reply.created_at|timesince }}</span>
+                  <a class="we-reply" href="#" title="Reply"
+                    ><i class="fa fa-reply"></i
+                  ></a>
+                  <a class="we-reply" title="Delete"
+                    ><i
+                      class="fa fa-trash delete_comment"
+                      aria-hidden="true"
+                      data-index="{{ reply.id }}"
+                    ></i
+                  ></a>
+                </div>
+                <p>{{ reply.content }}</p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+
+        <li class="post-comment">
+          <div class="comet-avatar">
+            <img src="{{ user.profile.profile_picture.url }}" alt="" />
+          </div>
+          <div class="post-comt-box">
+            <form id="comment-form">
+              <textarea
+                name="content"
+                id="comment-content"
+                placeholder="Post your comment"
+              ></textarea>
+              <button type="submit">
+                <i
+                  class="bi bi-send-fill"
+                  style="color: black; width: 20px; height: 20px"
+                ></i>
+              </button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'jquery/jquery.min.js' %}"></script>
+<script>
+  $(document).ready(function () {
+    $("#comment-form").on("submit", function (event) {
+      event.preventDefault();
+      var content = $("#comment-content").val();
+
+      if (content.trim() !== "") {
+        $.ajax({
+          type: "POST",
+          url: "{% url 'add_comment' post.id %}",
+          data: {
+            content: content,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          },
+          success: function (response) {
+            location.reload();
+            $(".comment_section").append(
+              `<li>
+                                <div class="comet-avatar">
+                                    <img src="{{ comment.user.profile.profile_picture.url }}" alt=""/>
+                                </div>
+                                <div class="we-comment">
+                                    <div class="coment-head">
+                                        <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                                        <span>just now</span>
+                                        <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
+                                    </div>
+                                    <p>${response.content}</p>
+                                </div>
+                            </li>`
+            );
+            $("#comment-content").val("");
+          },
+          error: function (response) {
+            alert("Error submitting comment.");
+          },
+        });
+      }
+    });
+
+    $("#like_btn").on("click", function (event) {
+      event.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'like_post' post.id %}",
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (reponse) {
+          location.reload();
+        },
+        error: function (repoonse) {
+          alert(reponse);
+        },
+      });
+    });
+    $("#dislike_btn").on("click", function (event) {
+      event.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'dislike_post' post.id %}",
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (reponse) {
+          location.reload();
+        },
+        error: function (repoonse) {
+          alert(reponse);
+        },
+      });
+    });
+    $(".delete_comment").on("click", function (event) {
+      var comment_id = $(this).data("index");
+      console.log(comment_id);
+      $.ajax({
+        type: "POST",
+        url: "{% url 'delete_comment' %}",
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+          comment_id: comment_id,
+        },
+        success: function (reponse) {
+          location.reload();
+        },
+        error: function (repoonse) {
+          alert(reponse);
+        },
+      });
+    });
+  });
+</script>

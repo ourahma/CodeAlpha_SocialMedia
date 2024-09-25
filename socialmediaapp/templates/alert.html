@@ -1,0 +1,81 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/alert.css' %}">
+
+{% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-error" id="alert-{{ forloop.counter }}">
+            <div class="icon__wrapper">
+                <i class="bi bi-ban-fill"></i>
+            </div>
+            <p>
+              Erreur <br>
+              {{ message }}
+            </p>
+            <span class="mdi mdi-open-in-new open"></span>
+            <button class="close" onclick="dismissAlert('{{ forloop.counter }}')">&times;</button>
+        </div>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <div class="alert alert-warning" id="alert-{{ forloop.counter }}">
+            <div class="icon__wrapper">
+                <span class="mdi mdi-alert-outline"></span>
+            </div>
+            <p>
+              Warning <br>
+              {{ message }}
+            </p>
+            <span class="mdi mdi-open-in-new open"></span>
+            <button class="close" onclick="dismissAlert('{{ forloop.counter }}')">&times;</button>
+        </div>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+        <div class="alert alert-info" id="alert-{{ forloop.counter }}">
+            <div class="icon__wrapper">
+                <span class="mdi mdi-alert-outline"></span>
+            </div>
+            <p>
+              Informations <br>
+              {{ message }}
+            </p>
+            <span class="mdi mdi-open-in-new open"></span>
+            <button class="close" onclick="dismissAlert('{{ forloop.counter }}')">&times;</button>
+        </div>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success" id="alert-{{ forloop.counter }}">
+            <div class="icon__wrapper">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <p>
+              Success <br>
+              {{ message }}
+            </p>
+            <span class="mdi mdi-open-in-new open"></span>
+            <button class="close" onclick="dismissAlert('{{ forloop.counter }}')">&times;</button>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<script>
+    // Function to hide the alert after 5 seconds
+    
+    setTimeout(function() {
+        var alerts = document.querySelectorAll(".alert");
+        alerts.forEach(function(alert) {
+            alert.classList.add('fade-out');  
+            setTimeout(function() {
+                alert.style.display = "none";  
+            }, 300);
+        });
+    }, 3000); 
+
+    // Function to dismiss an alert when the close button is clicked
+    
+    function dismissAlert(counter) {
+        var alert = document.getElementById("alert-" + counter);
+        if (alert) {
+            alert.classList.add('fade-out');  
+            setTimeout(function() {
+                alert.style.display = "none";  
+            }, 500); 
+        }
+    }
+
+</script>

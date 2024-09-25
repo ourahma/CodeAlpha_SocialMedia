@@ -1,0 +1,91 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #0676ed;
+  --background: #222b45;
+  --warning: #f2a600;
+  --success: #12c99b;
+  --error: #e41749;
+  --dark: #151a30;
+}
+
+.alert {
+  color: black;
+  min-height: 67px !important;
+  width: 320px !important; /* Adjust the width as needed */
+  border-radius: 12px !important;
+  padding: 16px 22px 17px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  position: fixed !important;
+  top: 20px; 
+  right: 20px !important; /* Adjust the distance from the right as needed */
+  z-index: 99999 !important; /* Ensure the alert is above other elements */
+  animation: slideIn 0.5s ease forwards !important; /* Add animation for sliding in */
+}
+
+@keyframes slideIn {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(0); }
+}
+.alert-warning {
+  background: var(--warning);
+}
+.alert-success {
+  background: var(--success);
+}
+.alert-primary {
+  background: var(--primary);
+}
+.alert-dark {
+  background: var(--dark);
+}
+.alert-error {
+  background: var(--error);
+}
+.alert .icon__wrapper {
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.253);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.alert .icon__wrapper span {
+  font-size: 21px;
+  color: #fff;
+}
+.alert p {
+  color: black;
+  font-family: Verdana;
+  margin-left: 10px;
+}
+.alert p a,
+.alert p a:visited,
+.alert p a:active {
+  color: black;
+}
+.alert .open {
+  margin-left: auto;
+  margin-right: 5px;
+}
+.alert .close, .alert .open {
+  color: black;
+  transition: transform 0.5s;
+  font-size: 18px;
+  cursor: pointer;
+}
+.alert .close:hover, .alert .open:hover {
+  transform: scale(1.3);
+}
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
