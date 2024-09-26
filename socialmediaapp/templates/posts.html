@@ -3,7 +3,7 @@
   <div class="user-post">
     <div class="friend-info">
       <figure>
-        <img src="{{ user.profile.profile_picture.url }}" alt="" />
+        <img src="{{ post.user.profile.profile_picture.url }}" alt="" />
       </figure>
       <div class="friend-name">
         <ins
@@ -101,7 +101,7 @@
       <ul class="we-comet comment_section">
         {% for comment,replies in post.get_comments_with_replies.items %}
         <li>
-          <div class="comet-avatar  ">
+          <div class="comet-avatar">
             <img src="{{ comment.user.profile.profile_picture.url }}" alt="" />
           </div>
           <div class="we-comment">
@@ -112,21 +112,58 @@
                 >
               </h5>
               <span>{{ comment.created_at|timesince }}</span>
-              <a class="we-reply" href="#" title="Reply"
-                ><i class="fa fa-reply"></i
-              ></a>
-              <a class="we-reply" title="Delete"
-                ><i
+              <button
+                class="we-reply reply-btn"
+                title="Reply"
+                style="border: none"
+                data-comment-id="{{ comment.id }}"
+              >
+                <i class="fa fa-reply"></i>
+              </button>
+              <button
+                class="we-reply"
+                title="Delete"
+                style="border: none; background: none"
+              >
+                <i
                   class="fa fa-trash delete_comment"
                   aria-hidden="true"
                   data-index="{{ comment.id }}"
-                ></i
-              ></a>
+                ></i>
+              </button>
             </div>
             <p>{{ comment.content }}</p>
           </div>
+
           <ul>
-            {% for Reply in replies %}
+            <li>
+              <!-- Reply form hidden by default -->
+              <div
+                class="reply-form"
+                id="reply-form-{{ comment.id }}"
+                style="display: none"
+              >
+                <input
+                  style="border: none"
+                  type="text"
+                  class="reply-content"
+                  name="reply"
+                  placeholder="Write your reply"
+                  id=""
+                />
+
+                <button
+                  type="submit"
+                  style="color: black; width: 20px; height: 20px; border: none"
+                >
+                  <i
+                    class="bi bi-send-fill submit-reply-btn"
+                    data-comment-id="{{ comment.id }}"
+                  ></i>
+                </button>
+              </div>
+            </li>
+            {% for reply in replies %}
             <li>
               <div class="comet-avatar">
                 <img
@@ -142,16 +179,20 @@
                     >
                   </h5>
                   <span>{{ reply.created_at|timesince }}</span>
-                  <a class="we-reply" href="#" title="Reply"
-                    ><i class="fa fa-reply"></i
-                  ></a>
-                  <a class="we-reply" title="Delete"
-                    ><i
+                  <button
+                    class="we-reply reply-btn"
+                    title="Reply"
+                    style="border: none"
+                  >
+                    <i class="fa fa-reply"></i>
+                  </button>
+                  <button class="we-reply" title="Delete" style="border: none">
+                    <i
                       class="fa fa-trash delete_comment"
                       aria-hidden="true"
                       data-index="{{ reply.id }}"
-                    ></i
-                  ></a>
+                    ></i>
+                  </button>
                 </div>
                 <p>{{ reply.content }}</p>
               </div>
@@ -277,5 +318,38 @@
         },
       });
     });
+
+    // Show the reply form when reply button is clicked
+  $(".reply-btn").on("click", function () {
+    var commentId = $(this).data("comment-id");
+    console.log(commentId);
+    $("#reply-form-" + commentId).toggle();  // Toggle visibility of the reply form
+  });
+
+  // Submit the reply using AJAX
+  $(".submit-reply-btn").on("click", function () {
+    var commentId = $(this).data("comment-id");
+    var replyContent = $("#reply-form-" + commentId).find(".reply-content").val();
+
+    if (replyContent.trim() !== "") {
+      $.ajax({
+        type: "POST",
+        url: "{% url 'add_reply' %}",
+        data: {
+          post_id:{{ post.id }},
+          content: replyContent,
+          comment_id: commentId,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          location.reload(); // Reload page to show the new reply
+        },
+        error: function (response) {
+          console.log("Error" + response.statusText)
+          location.reload()
+        }
+      });
+    }
+  });
   });
 </script>

@@ -15,6 +15,7 @@ class Profile(models.Model):
     receive_notifications = models.BooleanField(default=True)  # Notification settings
     theme = models.CharField(max_length=10, default='light')  # Options: 'light' or 'dark'
     friends = models.ManyToManyField('self', symmetrical=False, blank=True,default=None) 
+    friend_requests = models.ManyToManyField('FriendRequest', related_name='friend_requests', blank=True) 
     STATUS_TYPES = [
         ('ON LINE', 'on line'),
         ('OFF LINE', 'off line'),
@@ -49,6 +50,74 @@ class Profile(models.Model):
     def make_profile_offline(self):
         self.status='OFF LINE'
         self.save()
+        
+    def get_friends(self):
+        return self.friends.all()
+
+    def get_non_friends(self):
+        
+        all_users = User.objects.exclude(id=self.user.id) 
+        friends = self.get_friends()
+        non_friends = all_users.exclude(id__in=friends.values_list('id', flat=True))
+        return non_friends
+    
+    def get_received_friend_requests(self):
+        return FriendRequest.objects.filter(recipient=self.user, status='pending')
+
+    def get_sent_friend_requests(self):
+        return FriendRequest.objects.filter(sender=self.user, status='pending')
+    
+    def friend_count(self):
+        return self.friends.count()
+
+
+    def friend_request_count(self):
+        return self.friend_requests.count()
+    
+    
+    def send_friend_request(self, user_to_add):
+        if not self.is_friends(user_to_add) and not self.has_pending_request(user_to_add):
+            FriendRequest.objects.create(sender=self.user, recipient=user_to_add)
+            Notification.objects.create(
+            user=self.user,
+            notification_type='friend_request',
+            source_user=user_to_add,
+        )
+
+    def accept_friend_request(self, friend_request):
+        if friend_request.recipient == self.user and friend_request.status == 'pending':
+            self.friends.add(friend_request.sender.profile)
+            friend_request.sender.profile.friends.add(self.user.profile)
+            Notification.objects.create(
+            user=friend_request.sender,
+            notification_type='friend_request',
+            source_user=self.user,
+        )
+            friend_request.delete()
+            
+    def reject_friend_request(self, friend_request):
+    # Check if the request is for the current user
+        if friend_request.recipient == self.user and friend_request.status == 'pending':
+            # Update the request status to rejected
+            friend_request.status = 'rejected'
+            friend_request.save()
+    def has_pending_request(self, user):
+        return self.friend_requests.filter(id=user.id).exists()
+
+    def get_conversation_with_user(self, other_user):
+        return Message.objects.filter(
+            (models.Q(sender=self.user) & models.Q(recipient=other_user)) |
+            (models.Q(sender=other_user) & models.Q(recipient=self.user))
+        ).select_related('sender', 'recipient').prefetch_related('messages_replies')
+
+    
+    def get_conversation_replies(self, other_user):
+        conversations = self.get_conversation_with_user(other_user)
+        return conversations.filter(parent__isnull=False)
+  
+    
+    
+    
 # Post model to handle user posts
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -147,6 +216,7 @@ class Message(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False) 
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='messages_replies')
     
     def __str__(self):
         return f"{self.sender} messaged {self.recipient}"
@@ -221,6 +291,21 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"{self.source_user} {self.notification_type} to {self.user}"
+    
+    
+class FriendRequest(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_requests', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='received_requests', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    )
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"{self.sender} to {self.recipient} ({self.status})"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

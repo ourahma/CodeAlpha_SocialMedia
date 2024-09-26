@@ -1,0 +1,330 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<section>
+  <div class="gap gray-bg">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row" id="page-contents">
+            <div class="col-lg-3">
+              <aside class="sidebar static">
+                <div class="widget">
+                  <h4 class="widget-title">Sent Request</h4>
+                  <ul class="naves">
+                    {% if sentrequests %} {% for sentrequest in sentrequests %}
+                    <li>
+                      <img
+                        src="{{sentrequest.sender.profile.profile_picture.url }}"
+                        width="36px"
+                        height="36px"
+                        style="border-radius: 50%"
+                        alt=""
+                      />
+
+                      <a href="newsfeed.html" title=""
+                        >{{sentrequest.sender.username}} <br /><span
+                          class="status f-away"
+                        ></span
+                      ></a>
+                    </li>
+                    {% endfor %} {% else %} You not sent any friends requests {%
+                    endif %}
+                  </ul>
+                </div>
+                <!-- Shortcuts -->
+              </aside>
+            </div>
+            <div class="col-lg-6">
+              <div class="central-meta">
+                <div class="frnds">
+                  <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                      <a class="active" href="#frends" data-toggle="tab"
+                        >My Friends</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a class="" href="#frends-req" data-toggle="tab"
+                        >Friend Requests</a
+                      ><span>{{ countrequest }}</span>
+                    </li>
+                  </ul>
+
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                    <div class="tab-pane active fade show" id="frends">
+                      <ul class="nearby-contct">
+                        {% if users %} {% for user1 in users %}
+                        <li>
+                          <div class="nearly-pepls">
+                            <figure>
+                              <a href="time-line.html" title=""
+                                ><img
+                                  src="{{ user1.profile.profile_picture.url }}"
+                                  alt=""
+                              /></a>
+                            </figure>
+                            <div class="pepl-info">
+                              <h4>
+                                <a href="time-line.html" title=""
+                                  >{{ user1.username }}</a
+                                >
+                              </h4>
+
+                              <a
+                                href="#"
+                                title="Send a request"
+                                class="add-butn more-action send_request"
+                                data-user1="{{ user1.id }}"
+                                data-ripple=""
+                                >Send request</a
+                              >
+                            </div>
+                          </div>
+                        </li>
+                        {% endfor %} {% else %} You have no friends, Send a
+                        request {% endif %}
+                      </ul>
+                      <div class="lodmore">
+                        <button class="btn-view btn-load-more"></button>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="frends-req">
+                      <ul class="nearby-contct">
+                        {% if friendsrequests %} {% for friendsrequest in
+                        friendsrequests %}
+                        <li>
+                          <div class="nearly-pepls">
+                            <figure>
+                              <a href="time-line.html"
+                                ><img
+                                  src="{{ friendsrequest.sender.profile.profile_picture.url }}"
+                                  alt=""
+                              /></a>
+                            </figure>
+                            <div class="pepl-info">
+                              <h4>
+                                <a
+                                  href="time-line.html"
+                                  title="{{ friendsrequest.username }}"
+                                ></a>
+                              </h4>
+                              <span>{{ friendsrequest.sender.username }}</span>
+                              <a
+                                href="#"
+                                class="add-butn more-action delete_request"
+                                data-id="{{ friendsrequest.id }}"
+                                >delete Request</a
+                              >
+                              <a
+                                href="#"
+                                class="add-butn confirm"
+                                data-id="{{ friendsrequest.id }}"
+                                >Confirm</a
+                              >
+                            </div>
+                          </div>
+                        </li>
+                        {% endfor %} {% else %} You have no friend requests {%
+                        endif %}
+                      </ul>
+                      <button class="btn-view btn-load-more"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- centerl meta -->
+            <div class="col-lg-3">
+              <aside class="sidebar static">
+                <div class="widget friend-list stick-widget">
+                  <h4 class="widget-title">Friends</h4>
+                  <div id="searchDir"></div>
+                  <ul id="people-list" class="friendz-list">
+                    {% if friends %} {% for friend in friends %}
+                    <li>
+                      <figure>
+                        <img
+                          src="{{ friend.user.profile.profile_picture.url }}"
+                          alt=""
+                        />
+
+                        {% if friend.status == "on line" %}
+                        <span class="status f-online"></span>
+                        {% else %}
+                        <span class="status f-offline"></span>
+                        {% endif %}
+                      </figure>
+                      <div class="friendz-meta">
+                        <a href="time-line.html">{{ friend.user.username }}</a>
+                      </div>
+                    </li>
+                    {% endfor %} {% else %} You have no friends {% endif %}
+                  </ul>
+                  <div class="chat-box">
+                    <div class="chat-head">
+                      <span class="status f-online"></span>
+                      <h6>Bucky Barnes</h6>
+                      <div class="more">
+                        <span><i class="ti-more-alt"></i></span>
+                        <span class="close-mesage"
+                          ><i class="ti-close"></i
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="chat-list">
+                      <ul>
+                        <li class="me">
+                          <div class="chat-thumb"><img src="" alt="" /></div>
+                          <div class="notification-event">
+                            <span class="chat-message-item">
+                              Hi James! Please remember to buy the food for
+                              tomorrow! I’m gonna be handling the gifts and
+                              Jake’s gonna get the drinks
+                            </span>
+                            <span class="notification-date"
+                              ><time
+                                datetime="2004-07-24T18:18"
+                                class="entry-date updated"
+                                >Yesterday at 8:10pm</time
+                              ></span
+                            >
+                          </div>
+                        </li>
+                        <li class="you">
+                          <div class="chat-thumb">
+                            <img src="" alt="" />
+                          </div>
+                          <div class="notification-event">
+                            <span class="chat-message-item">
+                              Hi James! Please remember to buy the food for
+                              tomorrow! I’m gonna be handling the gifts and
+                              Jake’s gonna get the drinks
+                            </span>
+                            <span class="notification-date"
+                              ><time
+                                datetime="2004-07-24T18:18"
+                                class="entry-date updated"
+                                >Yesterday at 8:10pm</time
+                              ></span
+                            >
+                          </div>
+                        </li>
+                        <li class="me">
+                          <div class="chat-thumb"><img src="" alt="" /></div>
+                          <div class="notification-event">
+                            <span class="chat-message-item">
+                              Hi James! Please remember to buy the food for
+                              tomorrow! I’m gonna be handling the gifts and
+                              Jake’s gonna get the drinks
+                            </span>
+                            <span class="notification-date"
+                              ><time
+                                datetime="2004-07-24T18:18"
+                                class="entry-date updated"
+                                >Yesterday at 8:10pm</time
+                              ></span
+                            >
+                          </div>
+                        </li>
+                      </ul>
+                      <form class="text-box">
+                        <textarea
+                          placeholder="Post enter to post..."
+                        ></textarea>
+                        <div class="add-smiles">
+                          <span
+                            title="add icon"
+                            class="em em-expressionless"
+                          ></span>
+                        </div>
+                        <div class="smiles-bunch">
+                          <i class="em em---1"></i>
+                          <i class="em em-smiley"></i>
+                          <i class="em em-anguished"></i>
+                          <i class="em em-laughing"></i>
+                          <i class="em em-angry"></i>
+                          <i class="em em-astonished"></i>
+                          <i class="em em-blush"></i>
+                          <i class="em em-disappointed"></i>
+                          <i class="em em-worried"></i>
+                          <i class="em em-kissing_heart"></i>
+                          <i class="em em-rage"></i>
+                          <i class="em em-stuck_out_tongue"></i>
+                        </div>
+                        <button type="submit"></button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- friends list sidebar -->
+              </aside>
+            </div>
+            <!-- sidebar -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(document).ready(function () {
+    $(".send_request").on("click", function (e) {
+      console.log("send request ");
+      e.preventDefault();
+
+      var userId = $(this).data("user1");
+      $.ajax({
+        type: "POST",
+        url: "{% url 'send_friend_request' %}",
+        data: {
+          user_id: userId,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          location.reload();
+        },
+        error: function (xhr, status, error) {
+          alert("An error occurred. Please try again.");
+        },
+      });
+    });
+    $(".delete_request").on("click", function (e) {
+      e.preventDefault();
+      var id = $(this).data("id");
+      $.ajax({
+        type: "POST",
+        url: "{% url 'delete_friend_request' %}",
+        data: {
+          id: id,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          location.reload();
+        },
+        error: function (xhr, status, error) {
+          alert("An error occurred. Please try again.");
+        },
+      });
+    });
+    $(".confirm").on("click", function (e) {
+      e.preventDefault();
+      var id = $(this).data("id");
+      $.ajax({
+        type: "POST",
+        url: "{% url 'confirm_friend_request' %}",
+        data: {
+          id: id,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (response) {
+          location.reload();
+        },
+        error: function (xhr, status, error) {
+          alert("An error occurred. Please try again.");
+        },
+      });
+    });
+  });
+</script>
+{% endblock content %}

@@ -30,4 +30,26 @@ urlpatterns = [
     
     ## delete a comment
     path('post/delete_comment/',views.delete_comment,name="delete_comment"),
+    
+    ## reply to a comment 
+    path('post/add_reply/', views.add_reply, name='add_reply'),
+    
+    ## display users profile 
+    path('profile/', views.dashboard, name='profile'),
+    
+    ## display page of frends
+    
+    path('friends/',views.friends, name="friends"),
+    
+    ## send friend request 
+    path('send_friend_request/', views.send_friend_request, name='send_friend_request'),
+    ## delete friend requests
+    
+    path("delete_friend_request/",views.delete_friend_request,name="delete_friend_request"),
+    
+    ##confirm friend request
+    path('confirm/',views.confirm_friend_request,name="confirm_friend_request"),
+    
+    ## display the inbox
+    path("inbox/",views.inbox,name="inbox"),
 ] 

@@ -36,5 +36,11 @@ class NotificationAdmin(admin.ModelAdmin):
 class PageAdmin(admin.ModelAdmin):
     list_display=('owner','title','description','created_at')
     search_fields=('owner','title','description')
+    
+    
+@admin.register(FriendRequest)
+class FriendsRequestAdmin(admin.ModelAdmin):
+    list_display=('sender','recipient','created_at','status')
+    search_fields=('sender','reipient','status')
 
 
